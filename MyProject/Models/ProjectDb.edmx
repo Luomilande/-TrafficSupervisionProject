@@ -1,0 +1,291 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MyProjectDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Notice_info">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="NoticeContent" Type="text" />
+          <Property Name="CreationDate" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="State" Type="bit" Nullable="false" />
+          <Property Name="Author" Type="int" Nullable="false" />
+          <Property Name="Reading" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User_info">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="255" />
+          <Property Name="Sex" Type="bit" />
+          <Property Name="Age" Type="int" />
+          <Property Name="Date" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="State" Type="bit" Nullable="false" />
+          <Property Name="Role" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Video_info">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="255" />
+          <Property Name="Synopsis" Type="text" />
+          <Property Name="UpDate" Type="varchar" MaxLength="20" />
+          <Property Name="VideoContent" Type="varchar" MaxLength="255" />
+          <Property Name="AV_Number" Type="varchar" MaxLength="10" />
+          <Property Name="OccurrenceTime" Type="varchar" MaxLength="20" />
+          <Property Name="Address" Type="varchar" MaxLength="255" />
+          <Property Name="AuditStatus" Type="bit" />
+          <Property Name="AuditResultStatus" Type="bit" />
+          <Property Name="VideoStatus" Type="bit" />
+          <Property Name="AuthorID" Type="int" />
+          <Property Name="Reading" Type="int" />
+        </EntityType>
+        <EntityType Name="Video_Inspect">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AuditContents" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="AuditDate" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="AuditAdminID" Type="int" Nullable="false" />
+          <Property Name="AV_Number" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="AuditStatus" Type="bit" Nullable="false" />
+          <Property Name="Score" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Video_Vote">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AV_Number" Type="varchar" MaxLength="10" />
+          <Property Name="Vote_T" Type="int" />
+          <Property Name="Vote_F" Type="int" />
+        </EntityType>
+        <EntityType Name="WebSet_Tip">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Tip0" Type="text" />
+          <Property Name="Tip1" Type="text" />
+          <Property Name="Tip2" Type="text" />
+        </EntityType>
+        <EntityContainer Name="MyProjectDBModelStoreContainer">
+          <EntitySet Name="Notice_info" EntityType="Self.Notice_info" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User_info" EntityType="Self.User_info" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Video_info" EntityType="Self.Video_info" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Video_Inspect" EntityType="Self.Video_Inspect" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Video_Vote" EntityType="Self.Video_Vote" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WebSet_Tip" EntityType="Self.WebSet_Tip" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MyProjectDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="MyProjectDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Notice_info" EntityType="MyProjectDBModel.Notice_info" />
+          <EntitySet Name="User_info" EntityType="MyProjectDBModel.User_info" />
+          <EntitySet Name="Video_info" EntityType="MyProjectDBModel.Video_info" />
+          <EntitySet Name="Video_Inspect" EntityType="MyProjectDBModel.Video_Inspect" />
+          <EntitySet Name="Video_Vote" EntityType="MyProjectDBModel.Video_Vote" />
+          <EntitySet Name="WebSet_Tip" EntityType="MyProjectDBModel.WebSet_Tip" />
+        </EntityContainer>
+        <EntityType Name="Notice_info">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="NoticeContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CreationDate" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="State" Type="Boolean" Nullable="false" />
+          <Property Name="Author" Type="Int32" Nullable="false" />
+          <Property Name="Reading" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User_info">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Sex" Type="Boolean" />
+          <Property Name="Age" Type="Int32" />
+          <Property Name="Date" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="State" Type="Boolean" Nullable="false" />
+          <Property Name="Role" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Video_info">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Synopsis" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="UpDate" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="VideoContent" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="AV_Number" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="OccurrenceTime" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="AuditStatus" Type="Boolean" />
+          <Property Name="AuditResultStatus" Type="Boolean" />
+          <Property Name="VideoStatus" Type="Boolean" />
+          <Property Name="AuthorID" Type="Int32" />
+          <Property Name="Reading" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Video_Inspect">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AuditContents" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="AuditDate" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="AuditAdminID" Type="Int32" Nullable="false" />
+          <Property Name="AV_Number" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="AuditStatus" Type="Boolean" Nullable="false" />
+          <Property Name="Score" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Video_Vote">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AV_Number" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Vote_T" Type="Int32" />
+          <Property Name="Vote_F" Type="Int32" />
+        </EntityType>
+        <EntityType Name="WebSet_Tip">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Tip0" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Tip1" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Tip2" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MyProjectDBModelStoreContainer" CdmEntityContainer="MyProjectDBEntities">
+          <EntitySetMapping Name="Notice_info">
+            <EntityTypeMapping TypeName="MyProjectDBModel.Notice_info">
+              <MappingFragment StoreEntitySet="Notice_info">
+                <ScalarProperty Name="Reading" ColumnName="Reading" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="NoticeContent" ColumnName="NoticeContent" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User_info">
+            <EntityTypeMapping TypeName="MyProjectDBModel.User_info">
+              <MappingFragment StoreEntitySet="User_info">
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Age" ColumnName="Age" />
+                <ScalarProperty Name="Sex" ColumnName="Sex" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Video_info">
+            <EntityTypeMapping TypeName="MyProjectDBModel.Video_info">
+              <MappingFragment StoreEntitySet="Video_info">
+                <ScalarProperty Name="Reading" ColumnName="Reading" />
+                <ScalarProperty Name="AuthorID" ColumnName="AuthorID" />
+                <ScalarProperty Name="VideoStatus" ColumnName="VideoStatus" />
+                <ScalarProperty Name="AuditResultStatus" ColumnName="AuditResultStatus" />
+                <ScalarProperty Name="AuditStatus" ColumnName="AuditStatus" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="OccurrenceTime" ColumnName="OccurrenceTime" />
+                <ScalarProperty Name="AV_Number" ColumnName="AV_Number" />
+                <ScalarProperty Name="VideoContent" ColumnName="VideoContent" />
+                <ScalarProperty Name="UpDate" ColumnName="UpDate" />
+                <ScalarProperty Name="Synopsis" ColumnName="Synopsis" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Video_Inspect">
+            <EntityTypeMapping TypeName="MyProjectDBModel.Video_Inspect">
+              <MappingFragment StoreEntitySet="Video_Inspect">
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="AuditStatus" ColumnName="AuditStatus" />
+                <ScalarProperty Name="AV_Number" ColumnName="AV_Number" />
+                <ScalarProperty Name="AuditAdminID" ColumnName="AuditAdminID" />
+                <ScalarProperty Name="AuditDate" ColumnName="AuditDate" />
+                <ScalarProperty Name="AuditContents" ColumnName="AuditContents" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Video_Vote">
+            <EntityTypeMapping TypeName="MyProjectDBModel.Video_Vote">
+              <MappingFragment StoreEntitySet="Video_Vote">
+                <ScalarProperty Name="Vote_F" ColumnName="Vote_F" />
+                <ScalarProperty Name="Vote_T" ColumnName="Vote_T" />
+                <ScalarProperty Name="AV_Number" ColumnName="AV_Number" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WebSet_Tip">
+            <EntityTypeMapping TypeName="MyProjectDBModel.WebSet_Tip">
+              <MappingFragment StoreEntitySet="WebSet_Tip">
+                <ScalarProperty Name="Tip2" ColumnName="Tip2" />
+                <ScalarProperty Name="Tip1" ColumnName="Tip1" />
+                <ScalarProperty Name="Tip0" ColumnName="Tip0" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

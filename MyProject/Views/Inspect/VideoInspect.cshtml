@@ -1,0 +1,116 @@
+﻿
+@{
+    ViewBag.Title = "VideoInspect";
+    Layout = "~/Views/Shared/User_Layout.cshtml";
+}
+    <div class="col-md-12" id="videoinfo">
+        <div class="col-md-12">
+            <video id="myvideo" name="@ViewBag.AV_Number" preload="auto" controlslist="nodownload" controls="controls" style="width: 100%;height: 100%;">
+                <source src= "/Content/video/@ViewBag.VideoUrl" type="video/mp4">
+            </video>
+        </div>
+        <div class="col-md-12" style="margin-top:10px">
+
+            <div class="col-md-6" style="padding:0px"><label>标题:</label>@ViewBag.VideoTitle</div>
+            <div class="col-md-6"><label>时间:</label>@ViewBag.OccurrenceTime</div>
+            <div class="col-md-12" style="padding:0px"><label>地点:</label>@ViewBag.Address</div>
+            <div class="col-md-6" style="padding:0px"> <label>1.扣分:</label><input type="number" style="width:50%;" id="Score" /></div>
+            <div class="col-md-6">
+                <div class="col-md-6" name="btn" style="padding:0">
+                    <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+                    <button type="button" class="btn btn-success" onclick="upinfo(true)">通过</button>
+                </div>
+                <div class="col-md-6" name="btn">
+                    <!-- Indicates a successful or positive action -->
+                    <button type="button" class="btn btn-primary"  onclick="upinfo(false)">驳回</button>
+                </div>
+            </div>
+
+            <div class="col-md-12" style="padding:0px">
+                <label>2.通过/驳回说明</label>
+                <textarea class="form-control" id="ContentID" rows="4" placeholder=""></textarea>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <h4> <label>大概过程情况：</label></h4>
+            <p>
+                @ViewBag.Synopsis
+            </p>
+        </div>
+    </div>
+<script src="~/Scripts/axios.min.js"></script>
+<script src="~/Scripts/RequestMethod.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+         particlesinfo();
+    })
+    function upinfo(data) {
+        var Score = $("#Score").val();
+       var VideoContent = $("#ContentID").val();
+        var AV_Number = $("#myvideo").attr("name");
+        if (Score == "" || VideoContent == "") {
+            alert("请填写完整信息，否则无法提交！")
+        } else {
+             var obj = new Object();
+              obj.AuditContents = VideoContent;
+              obj.AuditStatus = data;
+              obj.AV_Number = AV_Number;
+              obj.Score = Score;
+              AxiosPost("/Inspect/VideoInspectHandle", obj, callback);
+        }
+    };
+    function callback(data) {
+        if (data) {
+            alert("审核完毕！");
+            window.location.replace("/Inspect/Video");
+        } else {
+            alert("审核出错！");
+        }
+    }
+    function callback2(item) {
+
+         $("#videoinfo").empty();
+            $("#videoinfo").append(`
+    <div class="col-md-12">
+        <video id="myvideo" name="`+item.AV_Number+`" preload="auto" controlslist="nodownload" controls="controls" style="width: 100%;height: 100%;">
+            <source src="`+item.Video_URL+`" type="video/mp4">
+        </video>
+    </div>
+    <div class="col-md-12" style="margin-top:10px">
+
+        <div class="col-md-6" style="padding:0px">
+            <div class="col-md-6" style="padding:0px"><label>标题:</label>`+item.Title+`</div>
+            <div class="col-md-6"><label>时间:</label>`+item.OccurrenceTime+`</div>
+            <div class="col-md-12" style="padding:0px"><label>地点:</label>`+item.Address+`</div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-6" name="btn" style="padding:0">
+                <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+                <button type="button" class="btn btn-success"  onclick="upinfo(true)">通过</button>
+                <button type="button" class="btn btn-danger" style="margin-left:10px" onclick="upinfo(false)">驳回</button>
+
+            </div>
+            <div class="col-md-6" name="btn">
+                <!-- Indicates a successful or positive action -->
+                <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="更换另一个审核内容" style="float:right" onclick="test()">更换</button>
+            </div>
+        </div>
+
+        <div class="col-md-12" style="padding:0px">
+            <label>通过/驳回说明</label>
+            <textarea class="form-control" id="ContentID" rows="4" placeholder=""></textarea>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <h4> <label>大概过程情况：</label></h4>
+        <p>
+            Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula.
+            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Donec ullamcorper nulla non metus auctor fringilla.
+            Maecenas sed diam eget risus varius blandit sit amet non magna. Donec id elit non mi porta gravida at eget metus. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+        </p>
+    </div>
+`);
+
+    }
+</script>

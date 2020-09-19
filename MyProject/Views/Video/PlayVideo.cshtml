@@ -1,0 +1,165 @@
+﻿
+@{
+    ViewBag.Title = "PlayVideo";
+}
+<style type="text/css">
+    .text-hidden {
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        display: -webkit-box;
+        padding: 0;
+    }
+
+    a:hover {
+        color: #fd4c5d;
+    }
+</style>
+<div class="container" style="padding:0;">
+    <div class="col-md-12" style="padding:0;">
+        <h2>Play/视频播放 <small>(@ViewBag.AV_Number)</small></h2>
+        <div class="col-md-12">
+            <video id="myvideo" name="@ViewBag.AV_Number" preload="auto" controlslist="nodownload" controls="controls" style="width: 100%;height: 100%;">
+                <source src="/Content/video/@ViewBag.VideoUrl" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <blockquote style="margin-bottom:0">
+                    <p>扣分：@ViewBag.Score</p>
+                    <p>原因：@ViewBag.VideoContent</p>
+                    <footer>核查员： <cite title="Source Title">@ViewBag.AuditAdmin</cite></footer>
+                </blockquote>
+            </div>
+            <div class="col-md-4">
+                <span>结果判定：</span>
+                @{
+                    if (ViewBag.AuditResultStatus)
+                    {
+                        <img id="img" src="~/Content/img/fh.png" />
+                    }
+                    else
+                    {
+                        <img id="img" src="~/Content/img/bf.png" />
+                    }
+                }
+            </div>
+            <div class="col-md-4">
+                <div class="col-md-12">
+                    <div class="progress" style="height:30px" id="vote">
+                        <div class="progress-bar progress-bar-success" style="width: 50%;line-height:30px">
+                            50%
+                        </div>
+                        <div class="progress-bar progress-bar-danger" style="width: 50%;line-height:30px">
+                            50%
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-12">
+                    <div class="col-md-6" style="padding:0;">
+                        <!-- Indicates a successful or positive action -->
+                        <button type="button" class="btn btn-success" style="width:100px;float:left;" onclick="addvote(true)">支 持</button>
+                    </div>
+                    <div class="col-md-6" style="padding:0;">
+                        <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+                        <button type="button" class="btn btn-danger" style="width:100px;float:right;" onclick="addvote(false)">反对</button>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8" style="margin-top:20px;padding:0">
+            <span style="font-weight: 700; font-size: 18px;">基本信息</span>
+
+            <div class="col-md-12">
+                <div class="col-md-6" style="padding:0px"><label>标题:</label>@ViewBag.VideoTitle</div>
+                <div class="col-md-6"><label>时间:</label>@ViewBag.OccurrenceTime</div>
+                <div class="col-md-6" style="padding:0px"><label>地点:</label>@ViewBag.Address</div>
+                <div class="col-md-6"><label>作者:</label>@ViewBag.Author</div>
+            </div>
+            <div class="col-md-12" style="padding:0">
+                <span style="font-weight: 700; font-size: 18px;">大概过程情况：</span>
+                <p class="lead" style="margin-right:10px;">
+                    &nbsp &nbsp @ViewBag.Synopsis
+                </p>
+            </div>
+
+        </div>
+
+        <div class="col-md-4" style="margin-top:20px;padding:0;">
+            <span style="font-weight: 700; font-size: 18px;">视频推荐</span>
+            <div id="hotvideo"></div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/axios.min.js"></script>
+<script src="~/Scripts/RequestMethod.js"></script>
+<script>
+    window.onload = function () {
+        particlesinfo();
+        getvoteinfo();
+        AxiosGet("/Video/GetHotVideo", null, getlist);
+    }
+    function getlist(data) {
+        $("#hotvideo").empty();
+        $.each(data, function (i, item) {
+            $("#hotvideo").append(`
+             <div class="col-md-12" style="padding:0; margin-top:20px">
+                <div class="col-md-6" style="padding:0">
+                  <a href="/Video/PlayVideo?av=`+ item.AV_Number + `">
+                        <img class="img-rounded" src="/Content/img/video/`+ item.AV_Number + `.png" style="width:160px;height:90px;">
+                 </a>
+                </div>
+                <div class="col-md-6" style="margin-top:10px;padding:0;">
+                    <div class="col-md-12 text-hidden">
+                   <a href="/Video/PlayVideo?av=`+ item.AV_Number + `">` + item.Title + `</a>
+                    </div>
+                    <div class="col-md-12 text-hidden" style="color:#999;font-size:12px;margin-top:10px;">up:`+ item.Name + `</div>
+                </div>
+            </div>
+`);
+        })
+    };
+    function getvoteinfo() {
+        var av = getQueryVariable("av");
+        AxiosGet("/Video/GetVote?av=" + av, null, getvote);
+    }
+    function getvote(data) {
+        var t = data.Vote_T;
+        var f = data.Vote_F;
+
+        $("#vote").empty();
+        $("#vote").append(`
+                        <div class="progress-bar progress-bar-success" style="width:`+ t / (t + f) * 100 + `%;line-height:30px">
+                            `+ t + `
+                        </div>
+                        <div class="progress-bar progress-bar-danger" style="width:`+ f / (t + f) * 100 + `%;line-height:30px">
+                            `+ f + `
+                        </div>
+`);
+    };
+
+    function addvote(tf) {
+        var av = getQueryVariable("av");
+        AxiosGet("/Video/AddVote?av=" + av + "&tf=" + tf, null, callback);
+    }
+    function callback(data) {
+        getvoteinfo();
+
+    }
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) { return pair[1]; }
+        }
+        return (false);
+    }
+
+
+</script>

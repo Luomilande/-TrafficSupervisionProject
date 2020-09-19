@@ -1,0 +1,93 @@
+﻿
+@{
+    ViewBag.Title = "NoticeList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .info{
+    background: #f1f1f16b;
+    border-radius: 5px;
+    }
+        a:hover {
+        color: #fd4c5d;
+    }
+</style>
+<div class="container">
+    <h2>NoticeList/公告列表</h2>
+    <div class="col-md-12" style="padding: 0">
+        <ol class="breadcrumb">
+            <li><a href="/Home/Index">首页</a></li>
+            <li class="active">公告列表</li>
+        </ol>
+    </div>
+    <div class="col-md-9 info">
+        <div class="col-md-12" style="padding:0;"><label style="font-weight: 700; font-size: 18px;">公告 信息</label></div>
+        <div class="col-md-12" style="padding:0;" id="noticeinfo">
+
+
+        </div>
+        <div class="col-md-12" style="padding:0;text-align:center;border-top:1px solid #ccc">
+            <h6 style="font-weight:bold;color:red;">到底了喔！</h6>
+
+        </div>
+
+    </div>
+    <div class="col-md-3">
+        <div class="col-md-12" style="border-bottom:1px solid #ccc"><label style="font-weight: 700; font-size: 18px;">最新公告</label></div>
+        <div class="col-md-12 " id="NewVideoList">
+
+        </div>
+    </div>
+</div>
+
+    <script src="~/Scripts/axios.min.js"></script>
+    <script>
+    var i =0;
+        window.onload = function () {
+            particlesinfo();
+            AxiosGet("/Home/GetNotice", null, getlist);
+            AxiosGet("/Home/GetNoticeList?PageNumber=1", null, addinfo);
+            i++;
+    }
+    $(document).ready(function () {
+        $(document).scroll(function () {
+            var res = $(this).scrollTop();
+            var height = $("#noticeinfo").height()
+            console.log("res:" + res + ",height:" + height);
+            if (height - res <= 900) {
+                i++;
+                if (i <=@ViewBag.YeShu) {
+                console.log(res + "触发ajax"+i);
+                AxiosGet("/Home/GetNoticeList?PageNumber="+i, null, addinfo);
+                }
+            }
+
+        })
+    })
+    function addinfo(data) {
+        $.each(data, function (i, item) {
+            $("#noticeinfo").append(`
+            <div class="col-md-12" style="padding:0;border-top: 1px solid #ccc;margin-bottom:20px;">
+            <div class="col-md-12" style="padding:0;margin-top: 20px;"><label><a target="_blank" href="/Home/NoticeInfo?id=`+ item.id + `" style="line-height: 28px;font-size: 18px;">` + item.Title + `</a></label></div>
+            <div class="col-md-12" style="height: 20px;"></div>
+            <div class="col-md-12" style="padding:0;">
+                <div class="col-md-6" style="padding:0;">
+                    <span style="color:#887e7e;">时间：`+ item.CreationDate +`</span>
+                    <span style="margin-left:20px;color:#887e7e;">浏览量：`+ item.Reading +`</span>
+                </div>
+                <div class="col-md-6"> <span style="float:right;">up:`+ item.Name +`</span></div>
+            </div>
+        </div>
+`);
+        })
+    }
+        function getlist(data) {
+        $("#NewVideoList").empty();
+        $.each(data, function (i, item) {
+            $("#NewVideoList").append(`
+ <div class="col-md-12 " style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:5px;padding: 0;"><a target="_blank" href="/Home/NoticeInfo?id=`+ item.id + `" style="line-height: 28px;">` + item.Title + `</a></div>
+`);
+        })
+    };
+    </script>

@@ -1,0 +1,260 @@
+﻿
+@{
+    ViewBag.Title = "WebSet";
+    Layout = "~/Views/Shared/User_Layout.cshtml";
+}
+
+<h2>WebSet/网站设置</h2>
+<div class="col-md-12" style="border-radius: 6px;border: 1px solid #ccc;">
+    <div class="col-md-12" style="margin-top:10px"><label>图片管理区：</label><span style="color:red;font-weight:100">慎重修改</span></div>
+    <div class="col-md-12" style="margin-bottom:10px;">
+        <div class="col-md-4">
+            <h5 style="font-weight: bold;">Logo1 <small>（登录处-90x30）</small></h5>
+            <img src="~/Content/img/webset/logo1.png" style="max-width:100%" />
+        </div>
+        <div class="col-md-4">
+            <h5 style="font-weight: bold;">Logo2 <small>（导航左上角-140x30）</small></h5>
+            <img src="~/Content/img/webset/logo2.png" style="max-width:100%" />
+        </div>
+        <div class="col-md-4">
+            <h5 style="font-weight: bold;">Logo3 <small>（页尾左下角-240x30）</small></h5>
+            <img src="~/Content/img/webset/logo3.png" style="max-width:100%" />
+        </div>
+
+        <div class="col-md-12">
+            <h5 style="font-weight: bold;">Tip <small>（首页横图-920x100）</small></h5>
+            <div class="col-md-12"><img style="width:100%;max-width:100%;" src="~/Content/img/webset/tip.png" /></div>
+        </div>
+    </div>
+    <div class="col-md-12"><label>上传图片预览：</label></div>
+    <div class="col-md-12">
+        <img class="imgs" style="max-width:100%;" />
+    </div>
+    <div class="col-md-12"><label>选择图片文件：</label></div>
+    <div class="col-md-12" style="margin-bottom:20px;">
+        <div class="col-md-4" style="padding-left:0px;">
+            <select class="form-control" id="imgtype">
+                <option value="logo1">Logo1(登录处-90x30)</option>
+                <option value="logo2">Logo2(导航左上角-140x30)</option>
+                <option value="logo3">Logo3(页尾左下角-240x30)</option>
+                <option value="tip">Tip(首页横图-920x100)</option>
+            </select>
+        </div>
+        <div class="col-md-4"> <input type="file" multiple="" name="fileimg" id="fileimg" accept="image/*"></div>
+        <div class="col-md-4"><button type="button" class="btn btn-primary" style="float:right;" onclick="upimg()">上传图片</button></div>
+    </div>
+
+
+</div>
+<div class="col-md-12"  style="border-radius: 6px;border: 1px solid #ccc;margin-top:20px">
+    <div class="col-md-12" style="margin-top:10px">
+        <label>公告管理区：</label>
+        <h6 style="color:red;font-weight:100">慎重修改：1.先选择修改的公告、2.在进行内容编辑,同时可以预览、3.提交修改好的信息</h6>
+        <blockquote id="tip0">
+               
+        </blockquote>
+    </div>
+    <div class="col-md-6">
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal1">
+            交规扣分标准
+        </button>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">扣分标准</h4>
+                    </div>
+                    <div class="modal-body" id="tip1">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">关 闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal2" style="margin-bottom:10px;float:right;">
+            上传流程规则
+        </button>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">规则流程</h4>
+                    </div>
+                    <div class="modal-body" id="tip2">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">关 闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4" style="margin-top:10px">
+        <label>1.选择编辑内容：</label>
+        <select class="form-control" id="tiptype">
+            <option value="tip">选择修改公告↓</option>
+            <option value="tip0">管理员公告</option>
+            <option value="tip1">扣分标准</option>
+            <option value="tip2">规则流程</option>
+        </select>
+    </div>
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-4">
+        <label>3.编辑好信息后即可提交：</label>
+        <button type="button" class="btn btn-info btn-lg" style="margin-bottom:10px;float:right;" onclick="uptip()">
+           保存编辑信息
+        </button>
+    </div>
+    <div class="col-md-12"><label>2.输入要编辑的信息：</label></div>
+    <div class="col-md-12" id="editor" style="z-index:0;margin-top:10px;margin-bottom:10px;">
+        <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
+    </div>
+</div>
+<script src="~/Scripts/wangEditor.min.js"></script>
+<script src="~/Scripts/axios.min.js"></script>
+<script src="~/Scripts/RequestMethod.js"></script>
+<script src="~/Scripts/ajaxfileupload.js"></script>
+<script type="text/javascript" language="javascript">
+    $(function () {
+      particlesinfo();
+       AxiosGet("/Admin/GetWebSetTip", null, getlist);
+    })
+    var E = window.wangEditor
+    var editor = new E('#editor');
+    editor.customConfig.debug = true;
+    editor.customConfig.menus = [
+        'head', // 标题
+        'bold', // 粗体
+        'fontSize',
+        'italic', // 斜体
+        'underline', // 下划线
+        'strikeThrough', // 删除线
+        'foreColor', // 文字颜色
+        'justify', // 对齐方式
+        'undo', // 撤销
+        'redo', // 重复
+        'qgs', // 去格式
+        'quote'
+    ];
+    editor.customConfig.onchange = function (html) {
+        // html 即变化之后的内容
+        var sel = $("#tiptype option:selected").val();
+        if (sel == "tip0") {
+            $("#" + sel + "").empty();
+                        var formatText = editor.txt.text();
+            $("#" + sel + "").append(`
+  <p>`+formatText+` </p>
+            <footer>Someone famous in <cite title="Source Title">管理员</cite></footer>
+`);
+            console.log(formatText);
+        } else if (sel == "tip1") {
+             $("#" + sel + "").empty();
+            $("#" + sel + "").append(html);
+            console.log(formatText);
+        } else if (sel == "tip2") {
+            $("#" + sel + "").empty();
+            $("#" + sel + "").append(html);
+            console.log(formatText);
+        }
+
+    }
+    editor.create();
+    $("#fileimg").change(function () {
+        $(".imgs").attr("src", URL.createObjectURL($(this)[0].files[0]));
+    })
+    function upimg() {
+        var file = $("input[name='fileimg']").val();
+        if (file == "") {
+            alert("请选择图片文件！")
+        } else {
+              // 获取最后一个'.'的角标
+        var point = file.lastIndexOf(".");
+        // 抽取字符串
+            var fileType = file.substr(point);
+            if (fileType == ".png") {
+                var sel = $("#imgtype option:selected").val();
+                $.ajaxFileUpload({
+                    url: '/admin/WebSetImg?type=' + sel,//请求地址
+
+                    //data: obj, //需提交的数据内容
+
+                    secureuri: false,//是否需要安全协议
+                    fileElementId: 'fileimg',//file的ID
+                    dataType: 'json',//返回值类型，一般为json
+                    success: function (data)//成功后执行
+                    {
+                        Callback(data);
+                    },
+                    error: function (data, status, e) {
+                        console.log(data);
+                    }
+                })
+            } else {
+                alert("文件格式不对!");
+            }
+        }
+      
+
+       
+      
+    }
+    function uptip() {
+        var Tip0 = $("#tip0").html();
+        var Tip1 = $("#tip1").html();
+        var Tip2 = $("#tip2").html();
+
+        var obj = new Object();
+        obj.Tip0 = Tip0;
+        obj.Tip1 = Tip1;
+        obj.Tip2 = Tip2;
+        AxiosPost("/Admin/WebSetTip", obj, Callback);
+        
+    }
+    function Callback(data) {
+            alert(data);
+    }
+    function getlist(data) {
+        $("#tip0").append(data.Tip0);
+        $("#tip1").append(data.Tip1);
+        $("#tip2").append(data.Tip2);
+    }
+    function isPicFile() {
+        // 获取文件字符串
+        var file = $("input[name='fileimg']").val();
+        alert(file);
+        if (file == "") {
+            return false;
+        }
+        // 获取最后一个'.'的角标
+        var point = file.lastIndexOf(".");
+        alert(point);
+        // 抽取字符串
+        var fileType = file.substr(point);
+        alert(fileType);
+        // 后缀名转换为小写
+        var fileType = fileType.toLowerCase();
+        alert(fileType);
+        // 创建格式数组
+        var suppotFile = new Array();
+        // 存储格式类型
+        suppotFile[0] = ".png";
+        //判断fileType是否存在数组里面
+        for (var i = 0; i < suppotFile.length; i++) {
+            if (suppotFile[i] == fileType) {
+                return true;
+            }
+        }
+        //如果不存在返回 false
+        alert("只能是(png)类型！");
+        return false;
+    }
+</script>

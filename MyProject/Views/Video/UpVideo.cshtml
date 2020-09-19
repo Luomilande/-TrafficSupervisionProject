@@ -1,0 +1,156 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<div class="container">
+    <div class="col-md-12 " style="margin-top: 30px;">
+        <div class="col-md-12" id="myvideo0">
+            <label>视频预览(仅支持100M大小以内的视频预览)</label> <h6></h6>
+            <video id="myvideo" preload="auto" controlslist="nodownload" controls="controls" poster="/Content/img/upvideo.jpg" style="width: 100%;height: 500px;object-fit:fill">
+                <source id="myvideo2" src="" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12" style="padding:0;">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <label>简单叙述大概过程情况。</label>
+                            <textarea class="form-control" id="SynopsisID" rows="4" placeholder="
+                                          例子
+                                          违章内容：XXX小车进行逆向行驶。"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label>标题</label>
+                            <input type="text" class="form-control" id="TitleID" placeholder="标题">
+                            <label>时间</label>
+                            <input type="datetime-local" class="form-control" id="OccurrenceTimeID">
+                        </div>
+                        <div class="col-md-6">
+
+                            <label>地点</label>
+                            <input type="text" class="form-control" id="AddressID" placeholder="地点">
+                            <div class="col-md-6" style="padding:0">
+                                <label>选择视频文件</label>
+                                <input type="file" multiple="" name="file1" id="file1" accept="video/*" onchange="videoPreview(this)">
+                            </div>
+                            <div class="col-md-6">
+                                <div id="LoadID"></div>
+                                <button type="submit" class="btn btn-primary" id="upfileID" style="margin-top:10px;float:right;" onclick="upfile()">提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function upfile() {
+        var Title = $("#TitleID").val();
+        var OccurrenceTime = $("#OccurrenceTimeID").val();
+        var Address = $("#AddressID").val();
+        var Synopsis = $("#SynopsisID").val();
+
+        if (Title == "" || OccurrenceTime == "" || Address == "" || Synopsis == ""||!isPicFile()) {
+            alert("请将举报信息填写完整，否则无法举报！");
+        } else {
+            $("#upfileID").attr('disabled', 'disabled');
+            $("#LoadID").empty();
+            $("#LoadID").append(`
+<i class="fa fa-refresh fa-spin fa-2x fa-fw margin-bottom" style="float: right;margin-top: 10px;"></i>
+`);
+
+            var obj = new Object();
+            obj.Title = Title;
+            obj.OccurrenceTime = OccurrenceTime;
+            obj.Address = Address;
+            obj.Synopsis = Synopsis;
+
+            $.ajaxFileUpload({
+                url: '/Video/UploadingVideo',//请求地址
+
+                data: obj, //需提交的数据内容
+
+                secureuri: false,//是否需要安全协议
+                fileElementId: 'file1',//file的ID
+                dataType: 'json',//返回值类型，一般为json
+                success: function (data)//成功后执行
+                {
+                    alert(data);
+                    $("#upfileID").attr('disabled', null);
+                    $("#LoadID").empty();
+                    $("#LoadID").append(`
+<i class="fa fa-check fa-2x fa-fw margin-bottom" style="float: right;margin-top: 10px;"></i>
+`);
+                },
+                error: function (data, status, e) {
+                    alert(data);
+                }
+            })
+        }
+    }
+    function videoPreview(source) {
+        var size = $("#file1")[0].files[0].size;
+        if (size < 104857600) {
+            var file = source.files[0];
+            console.log(source.files);
+
+            if (window.FileReader) {
+                var fr = new FileReader();
+                fr.onloadend = function (e) {
+                    console.log(e.target.result);
+                    $("#myvideo0").empty();
+                    $("#myvideo0").append(`
+<label>视频预览(仅支持100M大小以内的视频预览)</label> <h6></h6>
+            <video id="myvideo" preload="auto" controlslist="nodownload" controls="controls" poster="/Content/img/upvideo.jpg" style="width: 100%;height: 500px;object-fit:fill">
+                <source id="myvideo2" src="" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+`);
+                    $("#myvideo2").attr('src', e.target.result)
+                    $("#myvideo").attr('src', e.target.result)
+                    //                    $("#myvideo").append(`
+                    //<source id="myvideo2" src="`+ e.target.result + `" type="video/mp4">
+                    //`);
+                };
+                fr.readAsDataURL(file);
+            }
+        } else {
+            console.log("无法提供预览功能");
+        }
+    }
+    function isPicFile() {
+        // 获取文件字符串
+        var file = $("input[name='file1']").val();
+        if (file == "") {
+            return false;
+        }
+        // 获取最后一个'.'的角标
+        var point = file.lastIndexOf(".");
+        // 抽取字符串
+        var fileType = file.substr(point);
+        // 后缀名转换为小写
+        var fileType = fileType.toLowerCase();
+        // 创建格式数组
+        var suppotFile = new Array();
+        // 存储格式类型
+        suppotFile[0] = ".mp4";
+        suppotFile[1] = ".avi";
+        suppotFile[2] = ".flv";
+        suppotFile[3] = ".rmvb";
+        suppotFile[4] = ".wmv";
+        //判断fileType是否存在数组里面
+        for (var i = 0; i < suppotFile.length; i++) {
+            if (suppotFile[i] == fileType) {
+                return true;
+            }
+        }
+        //如果不存在返回 false
+        alert("只能是(.mp4)|(.avi)|(.flv)|(.rmvb)|(.wmv)类型！");
+        return false;
+    }
+</script>

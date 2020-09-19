@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "Video";
+    Layout = "~/Views/Shared/User_Layout.cshtml";
+}
+<div class="col-md-12">
+    <div class="col-md-12" style="line-height:50px;font-weight:bold;border-bottom:1px solid #ccc"><i class="fa fa-video-camera fa-fw"></i>上传视频信息<span style="font-weight:100;color:red;">(审核过的视频无法修改!!!)</span></div>
+    <div id="videoinfo">
+    </div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination" id="fenye">
+            
+        </ul>
+    </nav>
+
+
+
+
+</div>
+<script src="~/Scripts/axios.min.js"></script>
+<script src="~/Scripts/RequestMethod.js"></script>
+<script>
+    window.onload = function () {
+        getlistfy(@ViewBag.YeShu);
+        $("#fenye> li:eq(0)").addClass("active");
+        AxiosGet("/User/VideoList?PageNumber=1", null, getlist);
+    }
+    function getlist(data) {
+        $("#videoinfo").empty();
+        $.each(data, function (i, item) {
+            var code;
+            var code2;
+             var code3;
+            if (item.VideoStatus) {
+                item.VideoStatus = "正常";
+                code2 = `<small style="margin-right:20px"><i class="fa fa-check-circle-o" style="color:#4caf50"></i>视频状态：`+ item.VideoStatus + `</small>`;
+            } else {
+                item.VideoStatus = "异常";
+                code2 = `<small style="margin-right:20px"><i class="fa fa-check-circle-o" style="color:#f44336"></i>视频状态：`+ item.VideoStatus + `</small>`;
+            }
+           if (item.AuditStatus) {
+               item.AuditStatus = "已审核";
+               code3 = ` <small style="margin-right:20px"><i class="fa fa-check-circle-o" style="color:#4caf50"></i>审核状态：`+ item.AuditStatus + `</small>`;
+               code = '';
+           }
+           else
+           {
+               item.AuditStatus = "未审核";
+                code3 = ` <small style="margin-right:20px"><i class="fa fa-check-circle-o" style="color:#f44336"></i>审核状态：`+ item.AuditStatus + `</small>`;
+                code = ` <button type="button" class="btn btn-primary" style="margin:10px; margin-left: 50px"  title="审核过的视频无法进行修改!!!" onclick="modifyinfo(` + item.ID + `)">修 改</button>`;
+            }
+              $("#videoinfo").append(`
+ <div class="col-md-12" style="margin-top: 10px;border: 1px solid #ccc;border-radius: 5px;">
+        <div class="col-md-3" style="margin-top: 5px;margin-bottom: 5px;padding:0;">
+            <img src="/Content/img/video/`+ item.AV_Number + `.png" alt="..." class="img-rounded" style="width:160px;height:100px;">
+        </div>
+        <div class="col-md-9">
+            <div class="col-md-8">
+                <div class="col-md-12">
+                    <h3>`+ item.Title+`</h3>
+                </div>
+                <div class="col-md-12">
+                    <small>发布时间：`+ item.UpDate+`</small>
+                    <p class="text-nowrap">
+                        <small style="margin-right:20px"><i class="fa fa-play"></i>播放量：`+ item.Reading + `</small>
+                        `+ code2 + code3+`
+                        
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="col-md-12">
+                    <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+                    `+code+`
+
+                </div>
+                <div class="col-md-12">
+                    <!-- Indicates a successful or positive action -->
+                    <button type="button" class="btn btn-danger" style="margin:10px; margin-left: 50px"  onclick="upinfo(false,`+ item.ID + `)">删 除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+`);
+        })
+        $(".fa-play").css("color", "#03a9f4");
+    };
+    function getlistfy(data) {
+        for (var i = 1; i <= data; i++) {
+            $("#fenye").append(
+                  //`<li><a href="" onclick="getlistfy2(`+i+`)">`+i+`</a></li>`
+                   `<li>  <span onclick="getlistfy2(`+i+`)">`+i+` <span class="sr-only">(current)</span></span></li>`
+              );
+          }
+    }
+    function getlistfy2(data) {
+        $("#fenye> li").removeClass("active");
+        $("#fenye> li:eq("+(data-1)+")").addClass("active");
+        AxiosGet("/User/VideoList?PageNumber=" + data, null, getlist);
+    }
+        function upinfo(bool, ID) {
+        var obj = new Object();
+        obj.VideoStatus = bool;
+        obj.ID = ID;
+        AxiosPost("/User/VideoHandle", obj, callback);
+    }
+        function callback(data) {
+            AxiosGet("/User/VideoList?PageNumber=1", null, getlist);
+            if (data) {
+                alert("删除成功！");
+            } else {
+                 alert("删除失败！");
+            }
+       
+    }
+        function modifyinfo(id) {
+       location.href ="/Video/ModifyVideo/"+id;
+    }
+</script>

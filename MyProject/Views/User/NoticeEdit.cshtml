@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "NoticeEdit";
+    Layout = "~/Views/Shared/User_Layout.cshtml";
+}
+<div class="col-md-12" style="margin-bottom: 30px;border-bottom: 1px solid #ccc;">
+    <h4><i class=" fa fa-newspaper-o"></i>内容预览区</h4>
+</div>
+<div class="col-md-12" id="Preview"></div>
+<div id="editor">
+    <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
+</div>
+<div class="col-md-12" style="padding: 0;margin-top: 10px;">
+    <div class="col-md-6" style="padding: 0;">
+        <label>显示的公告标题：</label>
+        <input type="text" id="Title_text" placeholder="标题" style="width:50%;">
+    </div>
+    <div class="col-md-6" style="padding: 0;">
+        <button id="btn1" style="float: right;" onclick="upinfo()">发布</button>
+    </div>
+</div>
+<script src="~/Scripts/wangEditor.min.js"></script>
+<script src="~/Scripts/axios.min.js"></script>
+<script src="~/Scripts/RequestMethod.js"></script>
+<script type="text/javascript">
+    $(function () {
+        particlesinfo();
+    })
+    var E = window.wangEditor
+    var editor = new E('#editor');
+    editor.customConfig.debug = true;
+    editor.customConfig.menus = [
+        'head', // 标题
+        'bold', // 粗体
+        'fontSize',
+        'italic', // 斜体
+        'underline', // 下划线
+        'strikeThrough', // 删除线
+        'foreColor', // 文字颜色
+        'justify', // 对齐方式
+        'undo', // 撤销
+        'redo', // 重复
+        'qgs', // 去格式
+        'quote'
+    ];
+    editor.customConfig.onchange = function (html) {
+        // html 即变化之后的内容
+        $("#Preview").empty();
+        if ($("#Title_text").val() !== "") {
+            $("#Preview").append('<div class="col-md-12" style="text-align: center;"><h2>' + $("#Title_text").val() + '</h2> </div>')
+        }
+        $("#Preview").append(html);
+        console.log(html)
+    }
+    editor.create();
+
+
+    function upinfo() {
+        var Title = $("#Title_text").val();
+        if (Title == "" || editor.txt.html() == "") {
+            alert("请填写完整信息，否则无法发布公告！")
+        } else {
+        var obj = new Object();
+        obj.NoticeContent = editor.txt.html();
+        obj.Title = Title;
+        AxiosPost("/User/NoticeEditHandle", obj, Callback);
+        }
+
+    };
+    function Callback(data) {
+        if (data) {
+            $("#Title_text").val("");
+            editor.txt.clear();
+            editor.txt.append('<p>发布成功！</p>');
+        } else {
+            alert("发布失败!");
+        }
+    };
+</script>

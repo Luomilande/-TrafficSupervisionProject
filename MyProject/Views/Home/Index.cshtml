@@ -1,0 +1,165 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<style>
+    .up-info-a {
+        color: #999;
+    }
+
+    #NoticeId > div > a:hover {
+        color: #2ab69d;
+    }
+
+    .up_name > a:hover {
+        color: #fd4c5d;
+    }
+</style>
+<div class="jumbotron" style="text-align:center;background: #dedede38;">
+    <div class="container">
+        <h1>交通违章信息举报</h1>
+        <p>我们致力于为广大交通参与者提供更好的反馈服务平台！</p>
+        <p><a class="btn btn-primary btn-lg" href="/Video/UpVideo" role="button" style="background: #fff;color: black;border-color: black;">信息举报</a></p>
+    </div>
+
+</div>
+<div class="container">
+    <!--内容1-->
+    <div class="col-md-12" style="padding: 0;margin-top: 30px;">
+        <div>
+            <span style="font-weight: 700; font-size: 18px;">优质推荐</span>
+        </div>
+        <div class="row col-md-10 ttt" id="hotvideo">
+        </div>
+
+        <div class="col-md-2 ttt">
+            <button type="button" class="btn btn-primary btn-lg" style="width:100%" data-toggle="modal" data-target="#myModal">
+                <i class="fa fa-flag fa-2x pull-left" style="color:#ffffff"></i>公告信息<br>交规扣分标准
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">扣分标准</h4>
+                        </div>
+                        <div class="modal-body" id="tip1">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">关 闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-success btn-lg" style="width:100%;margin-top:10px;" data-toggle="modal" data-target="#myModal2">
+                <i class="fa fa-list-ol fa-2x pull-left" style="color:#ffffff"></i>流程规则<br>上传流程
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">规则流程</h4>
+                        </div>
+                        <div class="modal-body" id="tip2">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">关 闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--内容1end-->
+    <!--内容2-->
+    <div class="col-md-12" style="padding: 0;margin-top: 10px;">
+
+
+        <div class="row col-md-10 ttt">
+            <div class="col-md-12 ttt">
+                <span style="font-weight: 700; font-size: 18px;">最新推荐</span>
+                <span class="header-subtitle" style="float: right;font-size: 12px;padding-right: 15px;"><a href="/Home/VideoList">查看更多<i class="fa fa-angle-double-right fa-lg fa-fw"></i></a></span>
+            </div>
+            <div id="newvideo"></div>
+
+
+            <div class="col-md-12">
+                <img src="~/Content/img/webset/tip.png" style="width: 100%;">
+            </div>
+        </div>
+        <div class="col-md-2 ">
+            <div class="col-md-12" style="padding:0;"><i class="fa fa-newspaper-o fa-lg fa-fw"></i><label style="font-weight: 700; font-size: 18px;">网站公告</label></div>
+            <div id="NoticeId"></div>
+            <div>
+                <a class="btn btn-default btn-sm" href="/Home/NoticeList" style="width:100%;">查看更多<i class="fa fa-angle-double-right fa-lg fa-fw"></i></a>
+                <span></span>
+            </div>
+
+
+        </div>
+    </div>
+    <!--内容1end-->
+</div>
+
+
+
+<script src="~/Scripts/axios.min.js"></script>
+<script>
+    window.onload = function () {
+        particlesinfo();
+        AxiosGet("/Home/GetNotice", null, getlist);
+        AxiosGet("/Admin/GetWebSetTip", null, getlisttip);
+        AxiosGet("/Home/GetHotVideo", null, getlisthotvideo);
+        AxiosGet("/Home/GetNewVideo", null, getlistnewvideo);
+    }
+    function getlist(data) {
+        $("#NoticeId").empty();
+        $.each(data, function (i, item) {
+            $("#NoticeId").append(`
+ <div class="col-md-12 " style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:5px;padding: 0;">
+<a target="_blank" href="/Home/NoticeInfo?id=`+ item.id + `" style="line-height: 28px;">` + item.Title + `</a>
+</div>
+`);
+        })
+    };
+    function getlistnewvideo(data) {
+        apphtml(data, "#newvideo");
+    };
+    function getlisthotvideo(data) {
+        apphtml(data, "#hotvideo");
+    };
+    function apphtml(data, id) {
+        $(id).empty();
+        $.each(data, function (i, item) {
+            $(id).append(`
+   <div class="col-sm-3 col-md-3" style="margin-bottom: 10px;">
+            <a class="thumbnail" style="padding:0;" href="/Video/PlayVideo?av=`+ item.AV_Number + `">
+                <img style="width:100%;" src="/Content/img/video/`+ item.AV_Number + `.png" alt="..." class="img-rounded">
+            </a>
+            <div class="up_name" ><a href="/Video/PlayVideo?av=`+ item.AV_Number + `">` + item.Title + `</a></div>
+            <div class="col-md-12 ttt">
+                <div class="col-md-8 ttt up_name">
+                    <span class="up-info-a" href="#">UP: `+ item.Name + `</span>
+                </div>
+                <div class="col-md-4 ttt"><span><i class="fa fa-eye"></i>:`+ item.Reading + `</span></div>
+            </div>
+        </div>
+`);
+        })
+    }
+    function tipinfo(data) {
+        $("#tipinfo").empty();
+        $.each(data, function (i, item) {
+            $("#tipinfo").append(item.NoticeContent);
+        })
+    }
+    function noticeinfo(data) {
+        window.location.href("/Home/NoticeInfo?Id=" + data);
+    }
+    function getlisttip(data) {
+        $("#tip1").append(data.Tip1);
+        $("#tip2").append(data.Tip2);
+    }
+</script>

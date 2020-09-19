@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>交通违章信息举报平台</title>
+    <link rel="shortcut icon" href="~/Content/img/icons/favicon.ico">
+     <link rel ="Bookmark" href="~/Content/img/icons/favicon.ico">
+            <!-- Bootstrap -->
+            @Styles.Render("~/Content/css")
+            @Scripts.Render("~/bundles/modernizr")
+            @Scripts.Render("~/bundles/jquery")
+            @Scripts.Render("~/bundles/bootstrap")
+            @Scripts.Render("~/bundles/ajaxfileupload")
+            @RenderSection("scripts", required: false)
+            <script src="~/Scripts/particles.min.js"></script>
+            <script src="~/Scripts/RequestMethod.js"></script>
+            <script src="~/Scripts/particlesconfig.js"></script>
+</head>
+
+<body>
+    <!--导航栏-->
+    <div class="col-md-12  " style="border-bottom: 1px solid #eeeeee; float:none;">
+        <nav class="navbar navbar-default navbar-set container">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/Home/Index"><img src="~/Content/img/webset/logo2.png" class="center-vertical"></a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <div class="navbar-form navbar-left">
+                        <div class="form-group">
+                            <input type="text" id="Searchkey" class="form-control" placeholder="视频搜索">
+                        </div>
+                        <button type="submit" class="btn btn-default" onclick="Search()">搜索</button>
+                    </div>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        @if (Session["UserName"] != null)
+                        {
+                            <li> <a href="/User/Account">@Session["UserName"].ToString() </a></li>
+                            <li><a href="/User/LogOut"><i class="fa fa-power-off fa-lg fa-fw" style="color:#f17979"></i></a></li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="/User/Login">
+                                    <i class="fa  fa-user-circle-o fa-lg fa-fw"></i>
+                                </a>
+                            </li>
+                        }
+                        <li><a href="/Video/UpVideo"><i class="fa  fa-upload fa-lg fa-fw"></i></a></li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+    </div>
+    <!--导航栏end-->
+
+    <canvas class="background" style="width: 100%;height: 100%;position: absolute;left: 0;z-index:-1"> </canvas>
+        @RenderBody()
+    <!--尾页-->
+    <div class=" col-md-12" style="margin-top: 100px;">
+        <hr>
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-md-6 col-lg-6">
+                    <h4>
+                        <img src="~/Content/img/webset/logo3.png">
+                    </h4>
+                    <p>我们致力于为广大交通参与者提供更好的反馈服务平台！</p>
+                </div>
+                <div class="col-md-6  col-lg-6">
+                    <div class="row ">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-3">
+
+                        </div>
+                        <div class="col-sm-3">
+                            <h4>联系方式</h4>
+                            <ul class="list-unstyled">
+                                <li><a href="mailto:admin@bootcss.com">电子邮件</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-3">
+                            <h4>特别致谢</h4>
+                            <ul class="list-unstyled">
+                                <li><a href="https://v3.bootcss.com/" target="_blank">Bootstrap框架</a></li>
+                                <li><a href="https://marcbruederlin.github.io/particles.js/" target="_blank">Particle粒子</a></li>
+                                <li><a href="http://fontawesome.dashgame.com/" target="_blank">Font Awesome字体图标库</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    </div>
+            </div>
+
+            <div class="row footer-bottom">
+                <ul class="list-inline text-center">
+                    <li>安备号:3647493753</li> |<li>Copyright © 2007-2019 MonitorLc. 保留所有权利</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <!--尾页end-->
+</body>
+</html>
+<script>
+    function Search() {
+        var keyword = $("#Searchkey").val();
+        if (keyword == "") {
+            alert("请输入搜索的信息");
+        } else {
+            location.href = "/Home/Search?keyword=" + keyword;
+        }
+
+    }
+</script>

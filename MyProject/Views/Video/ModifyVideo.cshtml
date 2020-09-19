@@ -1,0 +1,101 @@
+﻿
+@{
+    ViewBag.Title = "ModifyVideo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+
+    <div class="col-md-12 " style="margin-top: 30px;">
+        <div class="col-md-12" id="myvideo0">
+            <h2>Modify/举报修改 <small>(@{
+                if (ViewBag.AV_Number == null)
+                {
+                    ViewBag.AV_Number=@"审核过的视频无法修改!";
+                }
+            }
+                @ViewBag.AV_Number )</small></h2>
+            <label>视频预览(仅支持100M大小以内的视频预览)</label> <h6></h6>
+            <video id="myvideo" name="@ViewBag.AV_Number" preload="auto" controlslist="nodownload" controls="controls" poster="/Content/img/upvideo.jpg" style="width: 100%;height: 500px;object-fit:fill">
+                <source id="myvideo2" src="/Content/video/@ViewBag.VideoUrl" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12" style="padding:0;">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <label>简单叙述大概过程情况。</label>
+                            <textarea class="form-control" id="SynopsisID" rows="4">@ViewBag.Synopsis</textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label>标题</label>
+                            <input type="text" class="form-control" id="TitleID" placeholder="标题">
+                            <label>时间</label>
+                            <input type="datetime-local" class="form-control" id="OccurrenceTimeID">
+                        </div>
+                        <div class="col-md-6">
+
+                            <label>地点</label>
+                            <input type="text" class="form-control" id="AddressID" placeholder="地点">
+                            <div class="col-md-6" style="padding:0">
+                                <label style="margin-top: 20px;">ps:修改后就可以点击保存了！</label>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="LoadID"></div>
+                                <button type="submit" class="btn btn-primary" id="upfileID" style="margin-top:10px;float:right;" onclick="upfile()">提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/axios.min.js"></script>
+<script>
+        window.onload = function () {
+            particlesinfo();
+            loadinfo();
+    }
+    function loadinfo() {
+            $("#TitleID").val("@ViewBag.VideoTitle");
+            $("#OccurrenceTimeID").val("@ViewBag.OccurrenceTime");
+            $("#AddressID").val("@ViewBag.Address");
+
+    }
+        function upfile() {
+            var Title = $("#TitleID").val();
+            var OccurrenceTime = $("#OccurrenceTimeID").val();
+            var Address = $("#AddressID").val();
+            var Synopsis = $("#SynopsisID").val();
+            var AV_Number = $("#myvideo").attr("name");
+            if (Title == "" || OccurrenceTime == "" || Address == "" || Synopsis == "") {
+                alert("请将举报信息填写完整，否则无法举报！");
+            } else {
+
+             var obj = new Object();
+            obj.Title = Title;
+            obj.AV_Number = AV_Number;
+            obj.OccurrenceTime = OccurrenceTime;
+            obj.Address = Address;
+            obj.Synopsis = Synopsis;
+            console.log(obj);
+            AxiosPost("/Video/ModifyVideoHandle",obj,callback);
+            }
+
+          
+    }
+    function callback(data) {
+        if (data) {
+            alert("修改成功！");
+            location.href ="/User/Account";
+        } else {
+            alert("修改失败！")
+        }
+    }
+</script>

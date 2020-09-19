@@ -1,0 +1,134 @@
+﻿
+@{
+    ViewBag.Title = "Setting";
+    Layout = "~/Views/Shared/User_Layout.cshtml";
+}
+
+<div class="col-md-12" style="border-bottom:1px solid #e5e9ef">
+    <div class="col-md-12" style="line-height:50px;font-weight:bold;border-bottom:1px solid #ccc"><i class="fa fa-cog fa-fw"></i>信息修改</div>
+    <div class="col-md-12">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">邮 箱:</label>
+                <div class="col-sm-10">
+                    <label style="padding-top:7px" id="email">xxx@xxx.com</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">原密码:</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="PasswordID" placeholder="修改密码(必填)">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">新密码:</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="NewPasswordID" placeholder="修改密码(必填)">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">姓 名:</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="NameID" placeholder="姓名">
+                </div>
+
+                <label class="col-sm-2 control-label">性 别:</label>
+                <div class="col-sm-4">
+                    <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="SexID1" value="男"> 男
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="SexID2" value="女"> 女
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">手机号:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="PhoneNumberID" placeholder="手机号(必填)">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">年 龄:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="AgeID" placeholder="年龄">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">地 址:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="AddressID" placeholder="地址">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" class="btn btn-success" onclick="upinfo()">提 交</button>
+                    <label style="font-weight:100;color:red;">修改需谨慎!</label>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="~/Scripts/particlesconfig.js"></script>
+<script src="~/Scripts/md5.js"></script>
+<script src="~/Scripts/axios.min.js"></script>
+<script src="~/Scripts/RequestMethod.js"></script>
+<script>
+    window.onload = function () {
+        AxiosGet("/User/GetSetting", null, getlist);
+        particlesinfo();
+    };
+    function getlist(data) {
+        console.log(data);
+        $("#email").empty();
+        $("#email").append(data.Email);
+        $("#NameID ").val(data.Name);
+
+        $("#PhoneNumberID ").val(data.PhoneNumber);
+        $("#AgeID ").val(data.Age);
+        $("#AddressID").val(data.Address);
+        if (data.Sex == 1) {
+            $("#SexID1").prop("checked", true);
+            $("#SexID2").prop("checked", false);
+        } else {
+            $("#SexID1").prop("checked", false);
+            $("#SexID2").prop("checked", true);
+        }
+    }
+    function upinfo() {
+
+        // hex_md5()
+        var Password = $("#PasswordID").val();
+        var NewPassword = $("#NewPasswordID").val();
+        var Name = $("#NameID ").val();
+        var PhoneNumber = $("#PhoneNumberID ").val();
+        var Age = $("#AgeID ").val();
+        var Address = $("#AddressID").val();
+        var Sex = $("input[name='inlineRadioOptions']:checked").val();
+        var obj = new Object();
+        if (Password != "" && NewPassword != "") {
+            Password = hex_md5(Password);
+            NewPassword = hex_md5(NewPassword);
+        }
+        if ((Password != "" && NewPassword == "") || (Password == "" && NewPassword != "")) {
+            alert("如需修改密码，请务必在原密码以及新密码填写完整！");
+        } else {
+            obj.Password = Password;
+            obj.NewPassword = NewPassword;
+            obj.Name = Name;
+            obj.PhoneNumber = PhoneNumber;
+            obj.Age = Age;
+            obj.Address = Address;
+            obj.Sex = Sex;
+            console.log(obj);
+            AxiosPost("/User/SettingHandle", obj, Callback);
+        }
+    }
+    function Callback(data) {
+        alert(data);
+    }
+</script>

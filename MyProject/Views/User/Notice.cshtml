@@ -1,0 +1,111 @@
+﻿
+@{
+    ViewBag.Title = "Notice";
+    Layout = "~/Views/Shared/User_Layout.cshtml";
+}
+
+    <div class="col-md-12">
+        <div class="col-md-12" style="line-height:50px;font-weight:bold;border-bottom:1px solid #ccc">
+            <div class="col-md-3" style="padding-left:0px"><i class="fa fa-book fa-fw"></i>发布公告信息 </div>
+            <div class="col-md-6">
+                <div class="col-md-9" style="padding-right:0px"> <input type="text" id="searchinfo" class="form-control" placeholder="请输入相关标题"></div>
+                <div class="col-md-3"><button type="button" class="btn btn-success" style="float:right;" onclick="search()">搜索</button></div>
+            </div>
+            <div class="col-md-3"><button type="button" class="btn btn-success" style="float:right;" onclick="window.location.href ='/User/NoticeEdit'">添加公告</button> </div>
+
+        </div>
+
+        <div class="col-md-12" id="noticeinfo">
+        </div>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination" id="fenye">
+            </ul>
+        </nav>
+
+    </div>
+<script src="~/Scripts/axios.min.js"></script>
+<script src="~/Scripts/RequestMethod.js"></script>
+<script type="text/javascript" language="javascript">
+    window.onload = function () {
+        particlesinfo();
+        getlistfy(@ViewBag.YeShu);
+        AxiosGet("/User/NoticeList?PageNumber=1", null, getlist);
+        $("#fenye> li:eq(0)").addClass("active");
+    }
+    function NoticeDelete(data) {
+        if (confirm('确定要删除吗?')) {
+
+            var obj = new Object;
+            obj.id = data;
+            AxiosPost("/User/NoticeDelete", obj, callback);
+        } else {
+            alert("false");
+        }
+    }
+    function callback(data) {
+        console.log("返回结果为:" + data);
+        if (data) {
+            $("#noticeinfo").empty();
+            AxiosGet("/User/NoticeList?PageNumber=1", null, getlist);
+        } else {
+            alert("删除失败！");
+        }
+    }
+    function getlist(data) {
+          $("#noticeinfo").empty();
+        $.each(data, function (i, item) {
+            if (item.State == 1) {
+                item.State = "正常";
+            } else {
+                 item.State = "删除";
+            }
+              $("#noticeinfo").append(`
+        <div class="col-md-12" style="margin-top: 10px;border: 1px solid #ccc;border-radius: 5px;">
+            <div class="col-md-8">
+                <div class="col-md-12">
+                  
+<a target="_blank" href="/Home/NoticeInfo?id=`+ item.id + `" style="line-height: 28px;">  <h3>`+ item.Title +`</h3></a>
+                </div>
+                <div class="col-md-12">
+                    <small>发布时间：`+item.CreationDate+`</small>
+                    <p class="text-nowrap">
+                        <small style="margin-right:20px"><i class="fa fa-book" style="color:#2196f3"></i>阅读量：`+ item.Reading +`</small>
+                        <small style="margin-right:20px"><i class="fa fa-check-circle-o" style="color:#009688"></i>状态：`+item.State+`</small>
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+
+                <div class="col-md-12">
+                    <!-- Indicates a successful or positive action -->
+                    <button type="button" class="btn btn-danger" style="margin-top:30px;float:right;" onclick="NoticeDelete(`+ item.id +`)">删 除</button>
+                </div>
+            </div>
+        </div>
+`);
+        })
+      
+    };
+    function getlistfy(data) {
+        for (var i = 1; i <= data; i++) {
+            $("#fenye").append(
+                  //`<li><a href="" onclick="getlistfy2(`+i+`)">`+i+`</a></li>`
+                   `<li>  <span onclick="getlistfy2(`+i+`)"  style="cursor:pointer">`+i+` <span class="sr-only">(current)</span></span></li>`
+              );
+          }
+    }
+    function getlistfy2(data) {
+        $("#fenye> li").removeClass("active");
+        $("#fenye> li:eq("+(data-1)+")").addClass("active");
+        AxiosGet("/User/NoticeList?PageNumber=" + data, null, getlist);
+    }
+    function search() {
+        var info = $("#searchinfo").val();
+        if (info == "") {
+            AxiosGet("/User/NoticeList?PageNumber=1", null, getlist);
+        } else {
+            AxiosGet("/User/NoticeSearch?info=" + info, null, getlist);
+        }
+    }
+</script>

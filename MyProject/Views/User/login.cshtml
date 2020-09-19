@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewBag.Title = "login";
+}
+<style>
+    .denglu {
+     width: 100%;
+     background-color: #fd4c5b;
+     text-align: center;
+     border-radius: 5px;
+     line-height: 40px;border: #fff;
+    }
+    #btn-denglu > a:hover {
+        background-color: #de3644;
+    }
+</style>
+    <div class="container">
+        <div class="col-md-12 container ttt">
+            <div class="col-md-8 col-md-offset-4">
+                <form class="form-horizontal log-set col-md-6">
+                    <h3><img src="~/Content/img/webset/logo1.png" />登录</h3>
+                    <div class="input-group" style="margin-bottom: 30px;">
+                        <div class="input-group-addon"><i class="fa fa-address-card-o fa-fw"></i></div>
+                        <input type="text" class="form-control" id="EmailID" placeholder="账号">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
+                        <input type="password" class="form-control" id="PasswordID" placeholder="密码">
+                    </div>
+                    <div> <label style="float:right"><a href="/User/Register" style="color:black;font-size:10px;font-weight: 100;">还没账号的点这里！</a></label></div>
+                    <div id="btn-denglu">
+                        <a class="btn btn-primary btn-lg denglu" role="button" onclick="postinfo()">登 录</a>
+                    </div>
+                   
+                </form>
+            </div>
+        </div>
+    </div>
+
+        <script src="~/Scripts/axios.min.js"></script>
+
+        <script src="~/Scripts/md5.js"></script>
+        <script>
+            window.onload = function () {
+                particlesinfo();
+            }
+            function postinfo() {
+                var Email = $("#EmailID").val();
+                var Password = hex_md5($("#PasswordID").val());
+                var obj = new Object();
+                obj.Email = Email;
+                obj.Password = Password;
+                console.log(obj);
+                AxiosPost("/User/LoginHandle", obj, Callback);
+            }
+            function Callback(data) {
+                if (data) {
+                    window.location.replace("/Home/Index");
+                } else {
+                    alert("登录失败");
+                }
+            }
+
+        </script>

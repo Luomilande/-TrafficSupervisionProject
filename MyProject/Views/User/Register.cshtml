@@ -1,0 +1,201 @@
+﻿
+@{
+    ViewBag.Title = "Register";
+}
+
+
+<div class="container">
+    <canvas class="background" style="width: 100%;height: 100%;position: absolute;left: 0;z-index:-1"> </canvas>
+    <div class="row">
+
+        <div class=" col-md-12" style="margin-top: 100px;">
+
+            <div class="col-md-4 col-md-offset-4" style="background: #f9f9f96b;border-radius: 10px;">
+                <form class="form-horizontal">
+                    <div class="form-group text-center"> <h1>注册 <small>用户基本信息注册</small></h1></div>
+
+                    <div class="form-group has-feedback" id="EmailDiv">
+                        <label class="col-sm-2 control-label"  style="padding: 0;line-height: 30px;">邮 箱</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="EmailID" placeholder="邮箱(必填)">
+
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback" id="PasswordDiv">
+                        <label  class="col-sm-2 control-label"  style="padding: 0;line-height: 30px;">密 码</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="PasswordID" placeholder="密码(必填)最少6位数-最多16位，包含字母">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="col-sm-2 control-label"  style="padding: 0;line-height: 30px;">姓 名</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="NameID" placeholder="姓名">
+                        </div>
+
+                        <label class="col-sm-2 control-label"  style="padding: 0;line-height: 30px;">性 别</label>
+                        <div class="col-sm-4">
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="SexID1" value="1" checked> 男
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="SexID2" value="0" > 女
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                    </div>
+                    <div class="form-group has-feedback" id="PhoneNumberDiv">
+                        <label  class="col-sm-2 control-label" style="padding: 0;line-height: 30px;">手机号</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="PhoneNumberID" placeholder="手机号(必填)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="col-sm-2 control-label"  style="padding: 0;line-height: 30px;">年 龄</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="AgeID" placeholder="年龄">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="col-sm-2 control-label"  style="padding: 0;line-height: 30px;">地 址</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="AddressID" placeholder="地址">
+                        </div>
+                    </div>
+                    <label style="float:right;font-size:10px;">
+                        <a href="/user/login" style="font-weight: 100;">如已有账号请点击这里。</a>
+                    </label>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+
+                            <button type="button" class="btn btn-success" onclick="upinfo()" style="width:100%">提 交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/particles.min.js"></script>
+<script src="~/Scripts/md5.js"></script>
+<script src="~/Scripts/axios.min.js"></script>
+<script src="~/Scripts/RequestMethod.js"></script>
+<script>
+    var pattern0 = new RegExp('^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$');//密码验证
+    var pattern1 = new RegExp('0?(13|14|15|17|18|19)[0-9]{9}');//手机号码
+    var pattern2 = /\w[-\w.+]*@@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/;//邮箱
+    var tf0 = false;
+    var tf1 = false;
+    var tf2 = false;
+    window.onload = function () {
+        Particles.init({
+            selector: '.background',
+            maxParticles: "70",
+            color: ['#DA0463', '#404B69', '#DBEDF3'],
+            sizeVariations: "5",
+            minDistance: "120",
+            speed: "0.5",
+            connectParticles: true
+        });
+    };
+    function upinfo() {
+        if (tf0 && tf1 && tf2) {
+            var Email = $("#EmailID").val();
+            var Password = hex_md5($("#PasswordID").val());
+            var Name = $("#NameID ").val();
+            var PhoneNumber = $("#PhoneNumberID").val();
+
+            var Age = $("#AgeID ").val();
+            var Address = $("#AddressID").val();
+            var Sex = $("input[name='inlineRadioOptions']:checked").val();
+            if (Sex == 1) {
+                Sex = true;
+            } else {
+                Sex = false;
+            }
+            var obj = new Object();
+            obj.Email = Email;
+            obj.Password = Password;
+            obj.Name = Name;
+            obj.PhoneNumber = PhoneNumber;
+            obj.Age = Age;
+            obj.Address = Address;
+            obj.Sex = Sex;
+            AxiosPost("/User/AddRegister", obj, callback);
+        } else {
+            alert("数据不符合标准");
+        }
+    }
+    function callback(data) {
+            alert(data);
+            window.location.replace("/User/Login");
+    }
+    $("#EmailID").change(function () {
+
+        if (pattern2.test($("#EmailID").val())) {
+              tf0 = true;
+              $("#EmailDiv").removeClass("has-error");
+              $("#EmailDiv").addClass("has-success");
+              $("#EmailDiv > div").find('span').remove();
+                          $("#EmailDiv > div").append(
+                              `<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                               <span id="inputSuccess2Status" class="sr-only">(success)</span>`
+            );
+        } else {
+              tf0 = false;
+              $("#EmailDiv").removeClass("has-success");
+              $("#EmailDiv").addClass("has-error");
+              $("#EmailDiv > div").find('span').remove();
+                          $("#EmailDiv > div").append(
+                `<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                 <span id="inputError2Status" class="sr-only">(error)</span>`
+            );
+        }
+    })
+    $("#PasswordID").change(function () {
+
+        if (pattern0.test($("#PasswordID").val())) {
+            tf1 = true;
+              $("#PasswordDiv").removeClass("has-error");
+              $("#PasswordDiv").addClass("has-success");
+              $("#PasswordDiv > div").find('span').remove();
+                          $("#PasswordDiv > div").append(
+                              `<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                               <span id="inputSuccess2Status" class="sr-only">(success)</span>`
+            );
+        } else {
+            tf1 = false;
+              $("#PasswordDiv").removeClass("has-success");
+              $("#PasswordDiv").addClass("has-error");
+              $("#PasswordDiv > div").find('span').remove();
+                          $("#PasswordDiv > div").append(
+                `<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                 <span id="inputError2Status" class="sr-only">(error)</span>`
+            );
+        }
+        })
+    $("#PhoneNumberID").change(function () {
+
+        if (pattern1.test($("#PhoneNumberID").val())&& $("#PhoneNumberID").val()<20000000000) {
+            tf2 = true;
+              $("#PhoneNumberDiv").removeClass("has-error");
+              $("#PhoneNumberDiv").addClass("has-success");
+              $("#PhoneNumberDiv > div").find('span').remove();
+                          $("#PhoneNumberDiv > div").append(
+                              `<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                               <span id="inputSuccess2Status" class="sr-only">(success)</span>`
+            );
+        } else {
+            tf2 = false;
+              $("#PhoneNumberDiv").removeClass("has-success");
+              $("#PhoneNumberDiv").addClass("has-error");
+              $("#PhoneNumberDiv > div").find('span').remove();
+                          $("#PhoneNumberDiv > div").append(
+                `<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                 <span id="inputError2Status" class="sr-only">(error)</span>`
+            );
+        }
+    })
+</script>
