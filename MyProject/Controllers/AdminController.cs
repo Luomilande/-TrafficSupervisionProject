@@ -143,6 +143,7 @@ namespace MyProject.Controllers
                 {
                     return Json("请选择图片文件！", JsonRequestBehavior.AllowGet);
                 }
+                //图片保存
                 //string filePath = files[0].FileName;
                 //string filename = filePath.Substring(filePath.LastIndexOf("\\") + 1);
                 string filename = type + fileExtension;
